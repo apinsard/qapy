@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for qapy project.
 
@@ -12,7 +13,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 import json
 
-from django.core.exceptions import ImproperlyConfigure
+from django.contrib.messages import constants as message_constants
+from django.core.exceptions import ImproperlyConfigured
 
 from unipath import Path
 
@@ -38,6 +40,8 @@ MEDIA_ROOT = BASE_DIR.child('media')
 STATIC_ROOT = BASE_DIR.child('static')
 STATICFILES_DIRS = []
 
+SITE_ID = 1
+
 DEBUG = False
 
 ALLOWED_HOSTS = []
@@ -48,14 +52,23 @@ WSGI_APPLICATION = 'qapy.wsgi.application'
 
 ROOT_URLCONF = 'qapy.urls'
 
-STATIC_URL = '/static'
+STATIC_URL = '/__static__/'
+STATIC_URL = '/__media__/'
 
+X_FRAME_OPTIONS = 'DENY'
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+ADMINS = [
+    ("Antoine Pinsard", "antoine.pinsard@gmail.com"),
+]
+MANAGERS = [
+    ("Antoine Pinsard", "antoine.pinsard@gmail.com"),
+]
 
 
 INSTALLED_APPS = [
@@ -107,4 +120,12 @@ DATABASES = {
             'CHARSET': 'utf-8',
         },
     },
+}
+
+MESSAGE_TAGS = {
+    message_constants.DEBUG: 'info',
+    message_constants.INFO: 'info',
+    message_constants.SUCCESS: 'success',
+    message_constants.WARNING: 'warning',
+    message_constants.ERROR: 'danger',
 }
