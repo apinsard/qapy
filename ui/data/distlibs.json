@@ -1,0 +1,39 @@
+{
+  "twbs": {
+    "type": "zip",
+    "version": "4.0.0-alpha",
+    "source": "https://github.com/twbs/bootstrap/archive/v{V}.zip",
+    "include": {
+      "bootstrap-{V}": [
+        "scss/",
+        "dist/js/bootstrap.min.js"
+      ]
+    },
+    "rename": {
+      "scss/bootstrap.scss": "scss/_twbs.scss",
+      "dist/js/bootstrap.min.js": "js/bootstrap.js"
+    }
+  },
+  "font-awesome": {
+    "type": "zip",
+    "version": "4.4.0",
+    "source": "https://fortawesome.github.io/Font-Awesome/assets/font-awesome-{V}.zip",
+    "include": {
+      "font-awesome-{V}": [
+        "scss/",
+        "fonts/"
+      ]
+    },
+    "rename": {
+      "scss/font-awesome.scss": "scss/_fa.scss"
+    }
+  },
+  "jquery": {
+    "type": "raw",
+    "version": "2.1.4",
+    "source": "http://code.jquery.com/jquery-{V}.min.js",
+    "rename": {
+      "jquery-{V}.min.js": "jquery.js"
+    }
+  }
+}

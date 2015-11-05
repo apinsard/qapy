@@ -74,7 +74,6 @@ MANAGERS = [
 INSTALLED_APPS = [
     'ui',
 
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
