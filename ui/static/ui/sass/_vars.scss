@@ -1,0 +1,43 @@
+/**
+ * Qapy
+ *******************************************************************/
+
+// [QAPY] Colors
+$menu-width: 250px;
+
+
+/**
+ * Font-Awesome
+ *******************************************************************/
+
+$fa-font-path: '../../lib/font-awesome/fonts';
+
+
+/**
+ * Bootstrap
+ *******************************************************************/
+
+// [TWBS] Features
+$enable-shadows: true;
+$enable-gradients: true;
+$enable-transitions: true;
+
+// [TWBS] Colors
+$body-bg: #eceeef;
+$brand-primary: #085a83;
+$brand-info: #4bacc6;
+$brand-danger: #ce5261;
+$gray-dark: #333;
+
+// [TWBS] Fonts
+$font-size-base: .95rem;
+$font-family-sans-serif: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-size-h1: 2.2rem;
+$font-size-h2: 1.8rem;
+$font-size-h3: 1.6rem;
+$font-size-h4: 1.3rem;
+$font-size-h5: 1.2rem;
+$font-size-h6: 1.05rem;
+
+// [TWBS] Navbar
+$navbar-border-radius: 0;

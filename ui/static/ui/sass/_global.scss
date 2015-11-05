@@ -1,0 +1,64 @@
+#header .navbar-brand {
+  display: block;
+  width: $menu-width;
+  margin-right: 0;
+}
+
+#main-menu {
+  width: $menu-width;
+  float: left;
+
+  .fa-ul {
+    margin-left: .2rem;
+    .fa {
+      color: $gray-light;
+      margin-right: 10px;
+    }
+    .fa-ul {
+      margin-left: 1rem;
+    }
+  }
+
+  a {
+    color: inherit;
+    &:hover {
+      text-decoration: none;
+      color: $brand-primary;
+      .fa {
+        color: $brand-primary;
+      }
+    }
+  }
+
+  h4 {
+    color: $gray-light;
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+#main-block {
+  display: flex;
+  flex-direction: row;
+  margin-left: $menu-width;
+  border: 1px solid darken($gray-lighter, 10%);
+
+  > #main-content {
+    padding: 1rem;
+    width: 100%;
+    background-color: white;
+  }
+  > #context-menu {
+    flex: none;
+    padding: 1rem;
+    width: $menu-width;
+    color: $gray-lighter;
+    background-color: $brand-primary;
+  }
+}
+
+#breadcrumb {
+  margin-left: $menu-width;
+  padding: 0;
+}
