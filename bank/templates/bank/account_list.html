@@ -1,0 +1,30 @@
+{% extends 'base_layout.html' %}
+{% load i18n %}
+
+{% block main_content %}
+<h1>{% trans "Accounts" %}</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Name" %}</th>
+      <th>{% trans "Amount" %}</th>
+      <th>{% trans "IBAN" %}</th>
+      <th>{% trans "BIC" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for account in object_list %}
+    <tr>
+      <td>{{ account.name }}</td>
+      <td>{{ account.amount }}</td>
+      <td>{{ account.iban }}</td>
+      <td>{{ account.bic }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block context_menu %}
+<a href="{% url 'bank:accounts_new' %}" class="btn btn-success btn-block">{% trans "New account" %}</a>
+{% endblock %}

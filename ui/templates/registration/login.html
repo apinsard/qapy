@@ -1,0 +1,13 @@
+{% extends 'base_layout.html' %}
+{% load i18n bs %}
+{% block main_content %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {% bs_field form.username %}
+  {% bs_field form.password %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+</form>
+
+{% endblock %}
