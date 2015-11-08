@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
+from .managers import DebitManager, CreditManager, TransactionManager
 
 
 class Account(models.Model):
@@ -36,10 +37,7 @@ class Account(models.Model):
             "though you don't actually have it. (Eg: money you lent)"))
 
     def __str__(self):
-        owner_name = self.owner.get_full_name()
-        if not owner_name:
-            owner_name = self.owner.username
-        return "{} - {}".format(self.name, owner_name)
+        return self.name
 
     def credit(self, amount):
         """Credit the account of the given amount."""
@@ -93,10 +91,17 @@ class Box(models.Model):
         blank=True, null=True)
 
     def __str__(self):
-        owner_name = self.owner.get_full_name()
-        if not owner_name:
-            owner_name = self.owner.username
-        return "{} - {}".format(self.name, owner_name)
+        return self.name
+
+    def credit(self, amount):
+        """Credit the account of the given amount."""
+        assert amount > 0
+        self.amount = F('amount') + amount
+
+    def debit(self, amount):
+        """Debit the account of the given amount."""
+        assert amount > 0
+        self.amount = F('amount') - amount
 
 
 class Transaction(models.Model):
@@ -121,6 +126,10 @@ class Transaction(models.Model):
         verbose_name=_("transaction date"), default=timezone.now)
     short_description = models.CharField(
         verbose_name=_("short_description"), max_length=100, blank=True)
+
+    objects = TransactionManager()
+    debits = DebitManager()
+    credits = CreditManager()
 
     def __str__(self):
         if self.amount < 0:

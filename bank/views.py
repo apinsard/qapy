@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.generic.base import View
-from django.views.generic.edit import CreateView
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views.generic.list import ListView
 
+from .forms import TransactionCreateForm
 from .models import Account, Box, Transaction
 
 
-class DashboardView(View):
-    pass
+class DashboardView(TemplateView):
+    template_name = 'bank/dashboard.html'
 
 
 class AccountsView(ListView):
     model = Account
+
+    def get_queryset(self):
+        return self.model.objects.filter(owner_id=self.request.user.pk)
 
 
 class AccountCreateView(CreateView):
@@ -29,12 +33,15 @@ class AccountCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class AccountUpdateView(View):
+class AccountUpdateView(UpdateView):
     model = Account
 
 
 class BoxesView(ListView):
     model = Box
+
+    def get_queryset(self):
+        return self.model.objects.filter(owner_id=self.request.user.pk)
 
 
 class BoxCreateView(CreateView):
@@ -50,17 +57,32 @@ class BoxCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class BoxUpdateView(View):
+class BoxUpdateView(UpdateView):
     model = Box
 
 
-class TransactionsView(View):
+class TransactionsView(ListView):
     model = Transaction
 
+    def get_queryset(self):
+        return self.model.objects.filter(
+            account__owner_id=self.request.user.pk)
 
-class TransactionCreateView(View):
-    model = Transaction
+
+class TransactionCreateView(FormView):
+    form_class = TransactionCreateForm
+    success_url = reverse_lazy('bank:transactions')
+    template_name = 'bank/transaction_create.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['owner_id'] = self.request.user.pk
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
-class TransactionUpdateView(View):
+class TransactionUpdateView(UpdateView):
     model = Transaction

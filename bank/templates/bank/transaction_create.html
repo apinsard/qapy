@@ -1,0 +1,20 @@
+{% extends 'base_layout.html' %}
+{% load i18n bs %}
+
+{% block main_content %}
+<h1>{% trans "New transaction" %}</h1>
+
+<form method="post">
+  {{ form.non_field_errors }}
+  {% csrf_token %}
+  {% bs_field form.from_account %}
+  {% bs_field form.from_other %}
+  {% bs_field form.amount %}
+  {% bs_field form.to_account %}
+  {% bs_field form.to_other %}
+  {% bs_field form.box %}
+  {% bs_field form.date %}
+  {% bs_field form.short_description %}
+  <button type="submit" class="btn btn-success">{% trans "Create" %}</button>
+</form>
+{% endblock %}
