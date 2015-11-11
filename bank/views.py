@@ -7,7 +7,7 @@ from django.views.generic.edit import (
 )
 from django.views.generic.list import ListView
 
-from .forms import TransactionCreateForm
+from .forms import TransactionCreateForm, BoxTransferForm
 from .models import Account, Box, Transaction
 
 
@@ -48,11 +48,23 @@ class AccountDeleteView(DeleteView):
     template_name = 'bank/account_delete.html'
 
 
-class BoxesView(ListView):
+class BoxesView(FormView):
     model = Box
+    form_class = BoxTransferForm
+    success_url = reverse_lazy('bank:boxes')
+    template_name = 'bank/box_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = self.get_queryset()
+        return context
 
     def get_queryset(self):
         return self.model.objects.filter(owner_id=self.request.user.pk)
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class BoxCreateView(CreateView):

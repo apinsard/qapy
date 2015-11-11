@@ -2,7 +2,7 @@
 from django import forms
 from django.utils import timezone
 
-from .models import Account, Box, Transaction
+from .models import Account, Box, Transaction, BoxTransfer
 
 class TransactionCreateForm(forms.Form):
     from_account = forms.ModelChoiceField(queryset=Account.objects.none(),
@@ -75,3 +75,19 @@ class TransactionCreateForm(forms.Form):
                                        other=(from_account or from_other),
                                        date=date, amount=amount,
                                        short_description=short_description)
+
+
+class BoxTransferForm(forms.ModelForm):
+
+    class Meta:
+        model = BoxTransfer
+        fields = ['from_box', 'to_box', 'amount']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        instance.from_box.debit(instance.amount)
+        instance.to_box.credit(instance.amount)
+        if commit:
+            instance.from_box.save()
+            instance.to_box.save()
+        return instance

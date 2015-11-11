@@ -1,5 +1,5 @@
 {% extends 'base_layout.html' %}
-{% load i18n %}
+{% load i18n bs %}
 
 {% block main_content %}
 <h1>{% trans "Boxes" %}</h1>
@@ -25,6 +25,15 @@
   {% endfor %}
   </tbody>
 </table>
+<h2>{% trans "Transfer money" %}</h2>
+<form method="post" class"form-inline">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {% bs_field form.amount %}
+  {% bs_field form.from_box %}
+  {% bs_field form.to_box %}
+  <button type="submit" class="btn btn-primary">{% trans "Transfer" %}</button>
+</form>
 {% endblock %}
 
 {% block context_menu %}
