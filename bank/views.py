@@ -24,9 +24,11 @@ class DashboardView(TemplateView):
         queryset = queryset.aggregate(total=Sum('amount'))
         amount = total_amount = queryset['total']
 
+        nb_weeks = 26
+
         week = int(format(datetime.date.today(), '%W'))
-        graph_weekly_keys = [str((w % 52)+1) for w in range(week-19, week+1)]
-        graph_weekly_values = ['null'] * 20
+        graph_weekly_keys = [str((w % 52)+1) for w in range(week-(nb_weeks-1), week+1)]
+        graph_weekly_values = ['null'] * nb_weeks
 
         transactions = Transaction.objects.filter(
             account__owner_id=self.request.user.pk)
