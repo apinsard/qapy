@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Sum, F, Func
 from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import (
@@ -14,9 +17,52 @@ from .models import Account, Box, Transaction
 class DashboardView(TemplateView):
     template_name = 'bank/dashboard.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        queryset = Account.objects.filter(owner_id=self.request.user.pk)
+        queryset = queryset.aggregate(total=Sum('amount'))
+        amount = total_amount = queryset['total']
+
+        week = int(format(datetime.date.today(), '%W'))
+        graph_weekly_keys = [str((w % 52)+1) for w in range(week-19, week+1)]
+        graph_weekly_values = ['null'] * 20
+
+        transactions = Transaction.objects.filter(
+            account__owner_id=self.request.user.pk)
+        transactions = transactions.annotate(
+            week=Func(F('date'), function='extract',
+                      template='%(function)s(week from %(expressions)s)')
+        ).values('week')
+        transactions = transactions.annotate(amount=Sum('amount'))
+        transactions = transactions.order_by('-week')
+
+        weekly_amounts = dict((str(int(t['week'])), t['amount'])
+                              for t in transactions)
+
+        graph_weekly_values[-1] = str(amount)
+        for i, w in enumerate(reversed(graph_weekly_keys[1:]), 2):
+            if w in weekly_amounts:
+                amount -= weekly_amounts[w]
+            print(i, w, amount)
+            graph_weekly_values[-i] = str(amount)
+
+        graph_weekly = {
+            'keys': '[{}]'.format(','.join(graph_weekly_keys)),
+            'values': '[{}]'.format(','.join(graph_weekly_values)),
+        }
+        context['graph_weekly'] = graph_weekly
+        return context
+
 
 class AccountsView(ListView):
     model = Account
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_amount'] = self.get_queryset().aggregate(
+            total=Sum('amount'))['total']
+        return context
 
     def get_queryset(self):
         return self.model.objects.filter(owner_id=self.request.user.pk)
@@ -98,7 +144,7 @@ class TransactionsView(ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(
-            account__owner_id=self.request.user.pk)
+            account__owner_id=self.request.user.pk).order_by('-date')
 
 
 class TransactionCreateView(FormView):

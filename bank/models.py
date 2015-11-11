@@ -133,19 +133,19 @@ class Transaction(models.Model):
 
     def __str__(self):
         if self.amount < 0:
-            return "{date}: {account} > {amount}€ > {other} " % {
-                'date': self.date,
-                'account': self.account,
-                'amount': abs(self.amount),
-                'other': self.other
-            }
+            return "{date}: {account} > {amount}€ > {other} ".format(
+                date=self.date,
+                account=self.account,
+                amount=abs(self.amount),
+                other=self.other
+            )
         else:
-            return "{date}: {account} < {amount}€ < {other} " % {
-                'date': self.date,
-                'account': self.account,
-                'amount': abs(self.amount),
-                'other': self.other
-            }
+            return "{date}: {account} < {amount}€ < {other} ".format(
+                date=self.date,
+                account=self.account,
+                amount=abs(self.amount),
+                other=self.other
+            )
 
 
 class BoxTransfer(models.Model):
@@ -168,9 +168,9 @@ class BoxTransfer(models.Model):
         verbose_name=_("transaction date"), default=timezone.now)
 
     def __str__(self):
-        return "{date}: {from} > {amount}€ > {to} " % {
-            'date': self.date,
-            'from': self.from_box,
-            'amount': abs(self.amount),
-            'to': self.to_box
-        }
+        return "{date}: {frm} > {amount}€ > {to} ".format(
+            date=self.date,
+            frm=self.from_box,
+            amount=abs(self.amount),
+            to=self.to_box
+       )
