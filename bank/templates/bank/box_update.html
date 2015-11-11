@@ -1,0 +1,21 @@
+{% extends 'base_layout.html' %}
+{% load i18n bs %}
+
+{% block main_content %}
+<h1>{% trans "Box:" %} {{ object.name }}</h1>
+
+<form method="post">
+  {{ form.non_field_errors }}
+  {% csrf_token %}
+  {% bs_field form.name %}
+  {% bs_field form.amount %}
+  {% bs_field form.value %}
+  {% bs_field form.parent_box %}
+  {% bs_field form.short_description %}
+  <button type="submit" class="btn btn-success">{% trans "Update" %}</button>
+</form>
+{% endblock %}
+
+{% block context_menu %}
+<a class="btn btn-danger btn-block" href="{% url 'bank:boxes_item_delete' pk=object.pk %}">{% trans "Delete" %}</a>
+{% endblock %}

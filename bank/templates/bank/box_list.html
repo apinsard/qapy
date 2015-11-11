@@ -16,7 +16,7 @@
   <tbody>
   {% for box in object_list %}
     <tr>
-      <td>{{ box.name }}</td>
+      <td><a href="{% url 'bank:boxes_item' pk=box.pk %}">{{ box.name }}</a></td>
       <td>{{ box.amount }}</td>
       <td>{{ box.value }}</td>
       <td>{{ box.parent_box }}</td>

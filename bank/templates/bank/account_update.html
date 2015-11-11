@@ -1,0 +1,21 @@
+{% extends 'base_layout.html' %}
+{% load i18n bs %}
+
+{% block main_content %}
+<h1>{% trans "Account:" %} {{ object.name }}</h1>
+
+<form method="post">
+  {{ form.non_field_errors }}
+  {% csrf_token %}
+  {% bs_field form.name %}
+  {% bs_field form.amount %}
+  {% bs_field form.iban %}
+  {% bs_field form.bic %}
+  {% bs_field form.is_virtual %}
+  <button type="submit" class="btn btn-success">{% trans "Update" %}</button>
+</form>
+{% endblock %}
+
+{% block context_menu %}
+<a class="btn btn-danger btn-block" href="{% url 'bank:accounts_item_delete' pk=object.pk %}">{% trans "Delete" %}</a>
+{% endblock %}

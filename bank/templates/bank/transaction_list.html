@@ -15,14 +15,14 @@
     </tr>
   </thead>
   <tbody>
-  {% for account in object_list %}
+  {% for transaction in object_list %}
     <tr>
-      <td>{{ account.date }}</td>
-      <td>{{ account.account }}</td>
-      <td>{{ account.amount }}</td>
-      <td>{{ account.other }}</td>
-      <td>{{ account.box }}</td>
-      <td>{{ account.short_description }}</td>
+      <td><a href="{% url 'bank:transactions_item' pk=transaction.pk %}">{{ transaction.date }}</a></td>
+      <td>{{ transaction.account }}</td>
+      <td>{{ transaction.amount }}</td>
+      <td>{{ transaction.other }}</td>
+      <td>{{ transaction.box }}</td>
+      <td>{{ transaction.short_description }}</td>
     </tr>
   {% endfor %}
   </tbody>

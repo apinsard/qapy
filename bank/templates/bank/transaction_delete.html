@@ -1,0 +1,12 @@
+{% extends 'base_layout.html' %}
+{% load i18n %}
+
+{% block main_content %}
+<h1>{% trans "Delete transaction:" %} {{ object }}</h1>
+<p>{% trans "Do you really want to delete this transaction ?" %}</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+  <a href="{% url 'bank:transactions_item' pk=object.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+</form>
+{% endblock %}

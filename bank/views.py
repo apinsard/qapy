@@ -2,7 +2,9 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import (
+    FormView, CreateView, UpdateView, DeleteView,
+)
 from django.views.generic.list import ListView
 
 from .forms import TransactionCreateForm
@@ -35,6 +37,15 @@ class AccountCreateView(CreateView):
 
 class AccountUpdateView(UpdateView):
     model = Account
+    fields = ['name', 'amount', 'iban', 'bic', 'is_virtual']
+    success_url = reverse_lazy('bank:accounts')
+    template_name = 'bank/account_update.html'
+
+
+class AccountDeleteView(DeleteView):
+    model = Account
+    success_url = reverse_lazy('bank:accounts')
+    template_name = 'bank/account_delete.html'
 
 
 class BoxesView(ListView):
@@ -59,6 +70,15 @@ class BoxCreateView(CreateView):
 
 class BoxUpdateView(UpdateView):
     model = Box
+    fields = ['name', 'short_description', 'amount', 'value', 'parent_box']
+    success_url = reverse_lazy('bank:boxes')
+    template_name = 'bank/box_update.html'
+
+
+class BoxDeleteView(DeleteView):
+    model = Box
+    success_url = reverse_lazy('bank:boxes')
+    template_name = 'bank/box_delete.html'
 
 
 class TransactionsView(ListView):
@@ -86,3 +106,12 @@ class TransactionCreateView(FormView):
 
 class TransactionUpdateView(UpdateView):
     model = Transaction
+    fields = ['other', 'date', 'short_description']
+    success_url = reverse_lazy('bank:transactions')
+    template_name = 'bank/transaction_update.html'
+
+
+class TransactionDeleteView(DeleteView):
+    model = Transaction
+    success_url = reverse_lazy('bank:transactions')
+    template_name = 'bank/transaction_delete.html'
