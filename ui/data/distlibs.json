@@ -16,7 +16,7 @@
   },
   "font-awesome": {
     "type": "zip",
-    "version": "4.4.0",
+    "version": "4.5.0",
     "source": "https://fortawesome.github.io/Font-Awesome/assets/font-awesome-{V}.zip",
     "include": {
       "font-awesome-{V}": [
@@ -37,9 +37,14 @@
     }
   },
   "chartjs": {
-    "type": "raw",
-    "version": "1.0.2",
-    "source": "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/{V}/Chart.min.js",
+    "type": "zip",
+    "version": "2.0.0-beta",
+    "source": "https://github.com/nnnick/Chart.js/archive/{V}.zip",
+    "include": {
+      "Chart.js-{V}": [
+        "Chart.min.js"
+      ]
+    },
     "rename": {
       "Chart.min.js": "Chart.js"
     }

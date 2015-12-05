@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from itertools import groupby
 
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Sum, F, Func
@@ -14,6 +15,13 @@ from .forms import TransactionCreateForm, BoxTransferForm
 from .models import Account, Box, Transaction
 
 
+def _week_keyfunc(x):
+    dt = x.date
+    if format(dt, '%W') == '00':
+        dt = datetime(dt.year-1, 12, 31)
+    return format(dt, '%Y-%W')
+
+
 class DashboardView(TemplateView):
     template_name = 'bank/dashboard.html'
 
@@ -24,36 +32,33 @@ class DashboardView(TemplateView):
         queryset = queryset.aggregate(total=Sum('amount'))
         amount = total_amount = queryset['total']
 
-        nb_weeks = 26
-
-        week = int(format(datetime.date.today(), '%W'))
-        graph_weekly_keys = [str((w % 52)+1) for w in range(week-(nb_weeks-1), week+1)]
-        graph_weekly_values = ['null'] * nb_weeks
-
         transactions = Transaction.objects.filter(
-            account__owner_id=self.request.user.pk)
-        transactions = transactions.annotate(
-            week=Func(F('date'), function='extract',
-                      template='%(function)s(week from %(expressions)s)')
-        ).values('week')
-        transactions = transactions.annotate(amount=Sum('amount'))
-        transactions = transactions.order_by('-week')
+            account__owner_id=self.request.user.pk).order_by('-date')
 
-        weekly_amounts = dict((str(int(t['week'])), t['amount'])
-                              for t in transactions)
+        by_weeks_keys = []
+        by_weeks_values = []
+        for k, v in groupby(transactions, _week_keyfunc):
+            by_weeks_keys.append(k.split('-')[1])
+            by_weeks_values.append(str(amount))
+            amount -= sum(x.amount for x in v)
 
-        graph_weekly_values[-1] = str(amount)
-        for i, w in enumerate(reversed(graph_weekly_keys[1:]), 2):
-            if w in weekly_amounts:
-                amount -= weekly_amounts[w]
-            print(i, w, amount)
-            graph_weekly_values[-i] = str(amount)
+        by_months_keys = []
+        by_months_values = []
+        for k, v in groupby(transactions, lambda x: format(x.date, "%Y-%m")):
+            by_months_keys.append(k.split('-')[1])
+            by_months_values.append(str(sum(x.amount for x in v)))
 
         graph_weekly = {
-            'keys': '[{}]'.format(','.join(graph_weekly_keys)),
-            'values': '[{}]'.format(','.join(graph_weekly_values)),
+            'keys': '[{}]'.format(','.join(by_weeks_keys[::-1])),
+            'values': '[{}]'.format(','.join(by_weeks_values[::-1])),
+        }
+
+        graph_monthly = {
+            'keys': '[{}]'.format(','.join(by_months_keys[::-1])),
+            'values': '[{}]'.format(','.join(by_months_values[::-1])),
         }
         context['graph_weekly'] = graph_weekly
+        context['graph_monthly'] = graph_monthly
         return context
 
 

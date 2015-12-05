@@ -4,6 +4,7 @@
 {% block main_content %}
 <h1>{% trans "Dashboard" %}</h1>
 <canvas id="graph-weekly" width=800 height=300></canvas>
+<canvas id="graph-monthly" width=800 height=300></canvas>
 {% endblock %}
 
 {% block scripts %}
@@ -11,26 +12,46 @@
 <script src="{% static "lib/chartjs/Chart.js" %}"></script>
 <script>
 $(function() {
-  var ctx = $('#graph-weekly').get(0).getContext('2d');
-  var weeklyChart = new Chart(ctx);
+  var ctx = $('#graph-weekly');
+  var weeklyChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ graph_weekly.keys }},
+      datasets: [
+        {
+          label: "weekly chart",
+          data: {{ graph_weekly.values }},
+        },
+      ],
+    },
+  });
+});
 
-  var today = new Date();
-  var weeks = {{ graph_weekly.keys }};
-
-  weeklyChart.Line({
-    labels: weeks,
+/*
     datasets: [
       {
-        label: "weekly chart",
         fillColor: "rgba(110, 110, 110, 0.2)",
         strokeColor: "rgba(110, 110, 110, 1)",
         pointColor: "rgba(110, 110, 110, 1)",
         pointStrokeColor: "#fff",
         pointHighlightFill: "#fff",
         pointHighlightStroke: "rgba(110, 110, 110, 1)",
-        data: {{ graph_weekly.values }},
       },
     ],
+*/
+$(function() {
+  var ctx = $('#graph-monthly');
+  var monthlyChart = new Chart(ctx , {
+    type: 'bar',
+    data: {
+      labels: {{ graph_monthly.keys }},
+      datasets: [
+        {
+          label: "monthly savings chart",
+          data: {{ graph_monthly.values }},
+        },
+      ],
+    },
   });
 });
 </script>
