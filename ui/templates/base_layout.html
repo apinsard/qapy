@@ -63,6 +63,7 @@
   <div id="main-block">
     <main id="main-content">
       {% block main_content %}{% endblock %}
+      {% include "inc/pagination.html" %}
     </main>
     {% block context_menu_outer %}
     <aside id="context-menu">

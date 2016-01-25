@@ -1,0 +1,24 @@
+{% load utils %}
+{% if is_paginated %}
+<nav>
+  <ul class="pagination">
+    {% if page_obj.number > 1 %}
+      <li class="page-item"><a class="page-link" href="{% url_replace request 'page' 1 %}">1</a></li>
+    {% endif %}
+
+    {% if page_obj.has_previous and page_obj.previous_page_number > 1 %}
+      <li class="page-item"><a class="page-link" href="{% url_replace request 'page' page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a></li>
+    {% endif %}
+
+    <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+    {% if page_obj.has_next and page_obj.next_page_number < paginator.num_pages %}
+      <li class="page-item"><a class="page-link" href="{% url_replace request 'page' page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a></li>
+    {% endif %}
+
+    {% if page_obj.number < paginator.num_pages %}
+      <li class="page-item"><a class="page-link" href="{% url_replace request 'page' paginator.num_pages %}">{{ paginator.num_pages }}</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

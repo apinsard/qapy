@@ -148,6 +148,8 @@ class BoxDeleteView(DeleteView):
 
 class TransactionsView(ListView):
     model = Transaction
+    paginate_by = 30
+    paginate_orphans = 10
 
     def get_queryset(self):
         return self.model.objects.filter(
