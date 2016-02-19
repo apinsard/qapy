@@ -113,7 +113,8 @@ class BoxesView(FormView):
         return context
 
     def get_queryset(self):
-        return self.model.objects.filter(owner_id=self.request.user.pk)
+        return self.model.objects.filter(
+            owner_id=self.request.user.pk).order_by('parent_box', 'name')
 
     def form_valid(self, form):
         form.save()
